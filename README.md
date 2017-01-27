@@ -26,9 +26,9 @@ The api for the webservices are
 
 Get Transactions For Account 
 	
-	http://{server}:8080/datastax-digital-banking/rest/my/banks/{BANK_ID}/accounts/{ACCOUNT_ID}/transactions
+	http://{server}:8080/rest/my/banks/{BANK_ID}/accounts/{ACCOUNT_ID}/transactions
 	
-	http://localhost:8080/datastax-digital-banking/rest/my/banks/{BANK_ID}/accounts/117352/transactions
+	http://localhost:8080/rest/my/banks/{BANK_ID}/accounts/117352/transactions
 	
 
 To remove the tables and the schema, run the following.

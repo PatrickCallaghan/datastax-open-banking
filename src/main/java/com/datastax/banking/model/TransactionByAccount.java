@@ -85,7 +85,7 @@ public class TransactionByAccount {
 	}
 
 	public String getJson() {
-		return JsonStringEncoder.getInstance().quoteAsString(json).toString();
+		return json;
 	}
 
 	public void setJson(String json) {

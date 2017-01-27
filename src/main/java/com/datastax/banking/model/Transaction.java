@@ -1,5 +1,7 @@
 package com.datastax.banking.model;
 
+import org.codehaus.jackson.io.JsonStringEncoder;
+
 import com.datastax.driver.mapping.annotations.Column;
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
