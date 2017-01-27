@@ -13,7 +13,8 @@ create table if not exists transactions_by_account(
 
 create table if not exists transactions(
  	transaction_id text,
-	bucket text,
 	json text,
-	PRIMARY KEY (transaction_id, bucket)
+	PRIMARY KEY (transaction_id)
 );
+
+
