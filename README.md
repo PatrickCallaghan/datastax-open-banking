@@ -1,4 +1,5 @@
-Open Banking
+# datastax-open-banking
+
 ========================
 
 To create the schema, run the following
@@ -23,16 +24,14 @@ To use the web service run
 The api for the webservices are 
 
 
-Get Transaction For Account 
+Get Transactions For Account 
 	
-	http://{server}:8080/datastax-digital-banking/rest/get/transactions/{account_id}
+	http://{server}:8080/datastax-digital-banking/rest/my/banks/{BANK_ID}/accounts/{ACCOUNT_ID}/transactions
 	
-	http://localhost:8080/datastax-digital-banking/rest/get/transactions/eeceed17-5d7e-40de-be07-bdc2f075feb6
+	http://localhost:8080/datastax-digital-banking/rest/my/banks/{BANK_ID}/accounts/117352/transactions
 	
 
 To remove the tables and the schema, run the following.
 
     mvn clean compile exec:java -Dexec.mainClass="com.datastax.demo.SchemaTeardown"
-    
-     
-# datastax-open-banking
+
