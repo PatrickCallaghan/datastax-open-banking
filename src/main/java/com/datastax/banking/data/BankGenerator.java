@@ -62,7 +62,7 @@ public class BankGenerator {
 		String json = String.format(transactionStr, transactionId, accountId, counterparty, dateFormatter.format(completed), 
 				dateFormatter.format(completed), numFormatter.format(Math.random()*1000), numFormatter.format(amount));
 			
-		return new TransactionByAccount(accountId, completed, transactionId, JsonStringEncoder.getInstance().quoteAsString(json).toString()); 
+		return new TransactionByAccount(accountId, completed, transactionId, json); 
 	}
 	
 	public static int getRandomAccountForCustomer(int customerId){
