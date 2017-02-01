@@ -46,7 +46,7 @@ public class Main {
 		ExecutorService executor = Executors.newFixedThreadPool(noOfThreads);
 		BankDao dao = new BankDao(contactPointsStr.split(","));
 				
-		int noOfTransactions = Integer.parseInt(noOfTransactionsStr);
+		long noOfTransactions = Long.parseLong(noOfTransactionsStr);
 		int noOfCustomers = Integer.parseInt(noOfCustomersStr);
 		boolean create = Boolean.parseBoolean(createStr);
 		
@@ -60,10 +60,10 @@ public class Main {
 		BankGenerator.date = new DateTime().minusDays(noOfDays).withTimeAtStartOfDay();
 		Timer timer = new Timer();
 		
-		int totalTransactions = noOfTransactions * noOfDays;
+		long totalTransactions = noOfTransactions * noOfDays;
 		
 		logger.info("Writing " + totalTransactions + " transactions for " + noOfCustomers + " customers.");
-		for (int i = 0; i < totalTransactions; i++) {
+		for (long i = 0; i < totalTransactions; i++) {
 			
 			try{
 				TransactionByAccount randomTransaction = BankGenerator.createRandomTransaction(noOfDays, noOfCustomers);
