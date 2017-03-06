@@ -37,7 +37,7 @@ Find transactions for this account where value is under 10
 
 	select * from transaction where solr_query = '"q":"account_id:05237266-b334-4704-a087-5b460a2ecf04","fq":"value:[-10 TO 0]"'; 
 
-To use spark, run 'dse spark' from a dse node. To count all the transactions run
+To use the spark shell to run commands, run 'dse spark' from a dse node. To count all the transactions run
 
 	val table = sc.cassandraTable("openb", "transaction"); 	
 	table.count()
