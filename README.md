@@ -1,7 +1,5 @@
 # datastax-open-banking
 
-========================
-
 This requires DataStax Enterprise running in SearchAnalytics mode.
 
 To create the schema, run the following
@@ -20,7 +18,8 @@ Create the search component for the transactions
 
 	dsetool create_core openb.transaction schema=src/main/resources/solr_schema.xml solrconfig=src/main/resources/solr_config.xml reindex=true	
 
-## RealTime transactions
+
+RealTime transactions
 
 When all historical transactions are loaded, the process will start creating random transactions for todays date and time. If you wish just to run real time transactions specify -DnoOfDays=0.
 
