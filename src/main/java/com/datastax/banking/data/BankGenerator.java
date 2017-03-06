@@ -9,13 +9,11 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.codehaus.jackson.io.JsonStringEncoder;
-import org.codehaus.jettison.json.JSONObject;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.datastax.banking.model.TransactionByAccount;
+import com.datastax.banking.model.Transaction;
 
 public class BankGenerator {
 
@@ -40,7 +38,7 @@ public class BankGenerator {
 		return BASE + new Double(Math.random()*noOfCustomers).intValue() + "";
 	}
 	
-	public static TransactionByAccount createRandomTransaction(int noOfDays, int noOfCustomers) {
+	public static Transaction createRandomTransaction(int noOfDays, int noOfCustomers) {
 
 		int noOfMillis = noOfDays * DAY_MILLIS;
 		// create time by adding a random no of millis 
@@ -49,7 +47,7 @@ public class BankGenerator {
 		return createRandomTransaction(newDate, noOfCustomers);
 	}
 
-	public static TransactionByAccount createRandomTransaction(DateTime newDate, int noOfCustomers) {
+	public static Transaction createRandomTransaction(DateTime newDate, int noOfCustomers) {
 
 		//Random account
 		int customerId = new Double(Math.random() * noOfCustomers).intValue() + 1;
@@ -62,7 +60,7 @@ public class BankGenerator {
 		String json = String.format(transactionStr, transactionId, accountId, counterparty, dateFormatter.format(completed), 
 				dateFormatter.format(completed), numFormatter.format(Math.random()*1000), numFormatter.format(amount));
 			
-		return new TransactionByAccount(accountId, completed, transactionId, json); 
+		return new Transaction(transactionId, completed, accountId, counterparty, amount, json); 
 	}
 	
 	public static int getRandomAccountForCustomer(int customerId){

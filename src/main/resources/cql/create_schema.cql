@@ -1,41 +1,32 @@
-create keyspace if not exists ob WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1};
-
-use ob;
-
-
-create table if not exists transactions_by_account(
-	account_id text,
-	completed timestamp,
- 	transaction_id text,
-	json text,
-	PRIMARY KEY ((account_id), completed, transaction_id)
-)WITH CLUSTERING  order by (completed desc, transaction_id ASC); 
-
 create keyspace if not exists openb WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1};
 
 use openb;
 
-create table if not exists transactions(
+create table if not exists transaction(
  	transaction_id text,
+	completed timestamp,
+	account_id text,
+	value double,
+	counterparty text,
 	json text,
 	PRIMARY KEY (transaction_id)
 );
 
-create table if not exists banks(
+create table if not exists bank(
 	banks text, 
 	bank_id text,
 	json text,
 	PRIMARY KEY (banks, bank_id)
 );
 
-create table if not exists branches(
-	bank_id text,
+create table if not exists branch(
+	bank_id text,	
 	branch_id text,
 	json text,
 	PRIMARY KEY (bank_id, branch_id)
 );
 
-create table if not exists atms(
+create table if not exists atm(
 	bank_id text, 
 	atm_id text,
 	latlon text,
@@ -43,14 +34,14 @@ create table if not exists atms(
 	PRIMARY KEY (bank_id, atm_id)
 );
 
-create table if not exists products(
+create table if not exists product(
 	bank_id text, 
 	code text,
 	json text,
 	PRIMARY KEY (bank_id, code)
 );
 
-create table if not exists accounts(
+create table if not exists account	(
 	bank_id text, 
 	account_id text,
 	iban text,

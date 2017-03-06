@@ -5,41 +5,42 @@ import com.datastax.driver.mapping.annotations.Column;
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
 
-@Table(keyspace = "openb", name = "products")
-public class Products{
+@Table(keyspace = "openb", name = "branch")
+public class Branch{
 
 	@PartitionKey
 	@Column(name = "bank_id")
-	private String id = "bankId";
+	private String bankId;
 	
 	@ClusteringColumn
-	private String code;
+	@Column(name = "branch_id")
+	private String branchId;
 	private String json;
-	
-	public Products() {
+		
+	public Branch() {
 	}
 
-	public Products(String id, String code, String json) {
+	public Branch(String bankId, String branchId, String json) {
 		super();
-		this.id = id;
-		this.code = code;
+		this.bankId = bankId;
+		this.branchId = branchId;
 		this.json = json;
 	}
-
-	public String getId() {
-		return id;
+	
+	public String getBankId() {
+		return bankId;
+	}
+	
+	public void setBankId(String bankId) {
+		this.bankId = bankId;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public String getBranchId() {
+		return branchId;
 	}
 
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
+	public void setBranchId(String branchId) {
+		this.branchId = branchId;
 	}
 
 	public String getJson() {

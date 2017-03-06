@@ -5,27 +5,24 @@ import com.datastax.driver.mapping.annotations.Column;
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
 
-@Table(keyspace = "openb", name = "atms")
-public class Atms{
+@Table(keyspace = "openb", name = "bank")
+public class Bank{
 
 	@PartitionKey
-	@Column(name = "bank_id")
-	private String bank = "bankId";
+	@Column(name = "banks")
+	private String bank = "banks";
 	
 	@ClusteringColumn
-	@Column(name = "atm_id")
-	private String atmId;
-	private String latlon; 
+	@Column(name = "bank_id")
+	private String bankId;
 	private String json;
 	
-	public Atms() {
+	public Bank() {
 	}
 	
-	public Atms(String bank, String atmId, String latlon, String json) {
+	public Bank(String bankId, String json) {
 		super();
-		this.bank = bank;
-		this.atmId = atmId;
-		this.latlon = latlon;
+		this.bankId = bankId;
 		this.json = json;
 	}
 
@@ -37,20 +34,12 @@ public class Atms{
 		this.bank = bank;
 	}
 
-	public String getAtmId() {
-		return atmId;
+	public String getBankId() {
+		return bankId;
 	}
 
-	public void setAtmId(String atmId) {
-		this.atmId = atmId;
-	}
-
-	public String getLatlon() {
-		return latlon;
-	}
-
-	public void setLatlon(String latlon) {
-		this.latlon = latlon;
+	public void setBankId(String bankId) {
+		this.bankId = bankId;
 	}
 
 	public String getJson() {
@@ -60,4 +49,6 @@ public class Atms{
 	public void setJson(String json) {
 		this.json = json;
 	}
+	
+	
 }

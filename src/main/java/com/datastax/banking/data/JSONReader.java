@@ -1,8 +1,10 @@
 package com.datastax.banking.data;
 
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.Locale;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -10,12 +12,12 @@ import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.datastax.banking.model.Accounts;
-import com.datastax.banking.model.Atms;
-import com.datastax.banking.model.Banks;
-import com.datastax.banking.model.Branches;
-import com.datastax.banking.model.Products;
-import com.datastax.banking.model.TransactionByAccount;
+import com.datastax.banking.model.Account;
+import com.datastax.banking.model.Atm;
+import com.datastax.banking.model.Bank;
+import com.datastax.banking.model.Branch;
+import com.datastax.banking.model.Product;
+import com.datastax.banking.model.Transaction;
 import com.datastax.banking.service.BankService;
 import com.datastax.demo.utils.FileUtils;
 
@@ -39,7 +41,6 @@ public class JSONReader {
 			JSONArray branchesList = (JSONArray) jsonObject.get("branches");			
 			JSONArray atmsList = (JSONArray) jsonObject.get("atms");						
 			JSONArray productsList = (JSONArray) jsonObject.get("products");
-			JSONArray crm_eventsList = (JSONArray) jsonObject.get("crm_events");
 			
 			Iterator<JSONObject> iterator = usersList.iterator();
             while (iterator.hasNext()) {
@@ -55,7 +56,7 @@ public class JSONReader {
             	JSONObject account = iterator.next();
             	
             	logger.info("Saving Account " + account.get("id").toString());
-            	bankService.saveAccount(new Accounts(account.get("bank").toString(), account.get("id").toString(), 
+            	bankService.saveAccount(new Account(account.get("bank").toString(), account.get("id").toString(), 
             			account.get("IBAN").toString(), account.get("number").toString(), account.toJSONString()));
             }            	
 
@@ -64,7 +65,7 @@ public class JSONReader {
             	JSONObject bank = iterator.next();
             	
             	logger.info("Saving Banks " + bank.get("id").toString());
-            	bankService.saveBank(new Banks(bank.get("id").toString(), bank.toJSONString()));
+            	bankService.saveBank(new Bank(bank.get("id").toString(), bank.toJSONString()));
             }            	
 
 			iterator = branchesList.iterator();
@@ -72,7 +73,7 @@ public class JSONReader {
             	JSONObject branch = iterator.next();
             	
             	logger.info("Saving Branches " + branch.get("bank_id").toString());
-            	bankService.saveBranch(new Branches(branch.get("bank_id").toString(), branch.get("id").toString(), branch.toJSONString()));
+            	bankService.saveBranch(new Branch(branch.get("bank_id").toString(), branch.get("id").toString(), branch.toJSONString()));
             }            	
 		
 			iterator = atmsList.iterator();
@@ -84,7 +85,7 @@ public class JSONReader {
             	JSONObject location = (JSONObject) atm.get("location");
             	String latlon = location.get("latitude") + "," + location.get("longitude");
             	
-            	bankService.saveAtm(new Atms(atm.get("bank_id").toString(), atm.get("id").toString(), latlon,
+            	bankService.saveAtm(new Atm(atm.get("bank_id").toString(), atm.get("id").toString(), latlon,
             			atm.toJSONString()));
             } 
             
@@ -93,7 +94,7 @@ public class JSONReader {
             	JSONObject product = iterator.next();
             	
             	logger.info("Saving product " + product.get("bank_id").toString());
-            	bankService.saveProduct(new Products(product.get("bank_id").toString(), product.get("code").toString(), product.toJSONString()));
+            	bankService.saveProduct(new Product(product.get("bank_id").toString(), product.get("code").toString(), product.toJSONString()));
             } 
             
 			iterator = transactionsList.iterator();
@@ -104,12 +105,16 @@ public class JSONReader {
             	JSONObject thisAccount = (JSONObject) transaction.get("this_account");
             	String accountId = thisAccount.get("id").toString();
             	
+            	
+            	JSONObject counterparty = (JSONObject) transaction.get("counterparty");
+            	String counterpartyName = counterparty.get("name").toString();
+            	
             	JSONObject details = (JSONObject) transaction.get("details");
             	Date completed = dateFormatter.parse(details.get("completed").toString());
+            	double value = new Double(details.get("value").toString()).doubleValue();
             	
             	logger.info("Saving Transaction " + transaction.get("id").toString());
-            	bankService.saveTransactonByAccount(
-            			new TransactionByAccount(accountId, completed, transactionId, transaction.toJSONString()));
+            	bankService.saveTransacton(new Transaction(transactionId, completed, accountId, counterpartyName, value, transaction.toJSONString()));
             } 
 		
 		} catch (Exception e) {

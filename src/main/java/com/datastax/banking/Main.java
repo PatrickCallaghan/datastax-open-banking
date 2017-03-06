@@ -1,10 +1,8 @@
 package com.datastax.banking;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
@@ -16,11 +14,8 @@ import org.slf4j.LoggerFactory;
 
 import com.datastax.banking.dao.BankDao;
 import com.datastax.banking.data.BankGenerator;
-import com.datastax.banking.model.Account;
-import com.datastax.banking.model.Customer;
+import com.datastax.banking.data.JSONReader;
 import com.datastax.banking.model.Transaction;
-import com.datastax.banking.model.TransactionByAccount;
-import com.datastax.banking.service.BankService;
 import com.datastax.demo.utils.KillableRunner;
 import com.datastax.demo.utils.PropertyHelper;
 import com.datastax.demo.utils.ThreadUtils;
@@ -38,7 +33,7 @@ public class Main {
 		String noOfTransactionsStr = PropertyHelper.getProperty("noOfTransactions", "1000000");
 		int noOfDays = Integer.parseInt(PropertyHelper.getProperty("noOfDays", "180"));
 
-		BlockingQueue<TransactionByAccount> queue = new ArrayBlockingQueue<TransactionByAccount>(1000);
+		BlockingQueue<Transaction> queue = new ArrayBlockingQueue<Transaction>(1000);
 		List<KillableRunner> tasks = new ArrayList<>();
 		
 		//Executor for Threads
@@ -49,6 +44,11 @@ public class Main {
 		long noOfTransactions = Long.parseLong(noOfTransactionsStr);
 		int noOfCustomers = Integer.parseInt(noOfCustomersStr);
 		boolean create = Boolean.parseBoolean(createStr);
+		
+		//Create a demo of open banking tables.
+		if (create){
+			new JSONReader();
+		}
 		
 		for (int i = 0; i < noOfThreads; i++) {
 			
@@ -66,7 +66,7 @@ public class Main {
 		for (long i = 0; i < totalTransactions; i++) {
 			
 			try{
-				TransactionByAccount randomTransaction = BankGenerator.createRandomTransaction(noOfDays, noOfCustomers);
+				Transaction randomTransaction = BankGenerator.createRandomTransaction(noOfDays, noOfCustomers);
 				if (randomTransaction!=null){
 					queue.put(randomTransaction);
 				}
@@ -86,7 +86,7 @@ public class Main {
 		 
 		while(true){
 			try{
-				TransactionByAccount randomTransaction = BankGenerator.createRandomTransaction(new DateTime(), noOfCustomers);
+				Transaction randomTransaction = BankGenerator.createRandomTransaction(new DateTime(), noOfCustomers);
 				if (randomTransaction!=null){
 					queue.put(randomTransaction);
 				}

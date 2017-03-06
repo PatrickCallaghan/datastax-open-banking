@@ -1,2 +1,2 @@
-drop keyspace ob;
+drop keyspace openb;
 	

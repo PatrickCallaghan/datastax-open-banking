@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<schema name="autoSolrSchema" version="1.5">
+<types>
+<fieldType class="org.apache.solr.schema.StrField" name="StrField"/>
+<fieldType class="org.apache.solr.schema.TextField" name="TextField">
+<analyzer>
+<tokenizer class="solr.StandardTokenizerFactory"/>
+<filter class="solr.LowerCaseFilterFactory"/>
+</analyzer>
+</fieldType>
+<fieldType class="org.apache.solr.schema.TrieDateField" name="TrieDateField"/>
+<fieldType class="org.apache.solr.schema.TrieDoubleField" name="TrieDoubleField"/>
+</types>
+<fields>
+<field indexed="true" multiValued="false" name="transaction_id" stored="true" type="StrField"/>
+<field indexed="true" multiValued="false" name="completed" stored="true" type="TrieDateField" docValues="true"/>
+<field indexed="true" multiValued="false" name="account_id" stored="true" type="TextField"/>
+<field indexed="false" multiValued="false" name="json" stored="true" type="TextField"/>
+<field indexed="true" multiValued="false" name="value" stored="true" type="TrieDoubleField" docValues="true"/>
+</fields>
+<uniqueKey>transaction_id</uniqueKey>
+</schema>	
+
