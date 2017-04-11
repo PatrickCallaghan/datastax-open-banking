@@ -20,7 +20,6 @@ public class BankGenerator {
 	private static final Logger logger = LoggerFactory.getLogger(BankGenerator.class);
 	private static final int BASE = 1000000;
 	private static final int DAY_MILLIS = 1000 * 60 *60 * 24;
-	private static AtomicInteger customerIdGenerator = new AtomicInteger(1);
 	private static List<String> accountTypes = Arrays.asList("Current", "Joint Current", "Saving", "Mortgage", "E-Saving", "Deposit");
 	private static NumberFormat numFormatter = NumberFormat.getCurrencyInstance();
 	private static SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
@@ -29,7 +28,7 @@ public class BankGenerator {
 			"\"details\":{\"type\":\"10219\",\"description\":\"\",\"posted\":\"%s\",\"completed\":\"%s\",\"new_balance\":\"%s\",\"value\":\"%s\"}}";
 	
 	//We can change this from the Main
-	public static DateTime date = new DateTime().minusDays(180).withTimeAtStartOfDay();
+	public static DateTime date = new DateTime().withTimeAtStartOfDay();
 	
 	public static List<String> whiteList = new ArrayList<String>();
 			
@@ -41,8 +40,9 @@ public class BankGenerator {
 	public static Transaction createRandomTransaction(int noOfDays, int noOfCustomers) {
 
 		int noOfMillis = noOfDays * DAY_MILLIS;
+		
 		// create time by adding a random no of millis 
-		DateTime newDate = date.plusMillis(new Double(Math.random() * noOfMillis).intValue() + 1);
+		DateTime newDate = date.minusMillis(new Double(Math.random() * noOfMillis).intValue() + 1);
 		
 		return createRandomTransaction(newDate, noOfCustomers);
 	}

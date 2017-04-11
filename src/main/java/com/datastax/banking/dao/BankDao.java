@@ -45,7 +45,6 @@ public class BankDao {
 	private static final String GET_ALL_ACCOUNTS_BY_BANK_ID = "SELECT * FROM openb.account where bank_id = ?";
 	private static final String GET_ALL_ATMS_BY_BANK_ID = "SELECT * FROM openb.atm where bank_id = ?";
 	private static final String GET_ALL_BRANCHES_BY_BANK_ID = "SELECT * FROM openb.branch where bank_id = ?";
-	private static final String GET_TRANSACTION_BY_ID = "SELECT * FROM openb.transaction where transaction_id = ?";
 	private static final String GET_ALL_BANKS = "SELECT * FROM openb.bank where banks = ?";
  
 	
@@ -57,7 +56,6 @@ public class BankDao {
 	private PreparedStatement getAccounts;
 	private PreparedStatement getAtms;
 	private PreparedStatement getBranches;
-	private PreparedStatement getTransaction;
 	private PreparedStatement getBanks;
 
 	
@@ -79,7 +77,6 @@ public class BankDao {
 		this.getAccounts = session.prepare(GET_ALL_ACCOUNTS_BY_BANK_ID);
 		this.getAtms = session.prepare(GET_ALL_ATMS_BY_BANK_ID);
 		this.getBranches = session.prepare(GET_ALL_BRANCHES_BY_BANK_ID);
-		this.getTransaction = session.prepare(GET_TRANSACTION_BY_ID);
 		this.getBanks = session.prepare(GET_ALL_BANKS);
 
 		
@@ -129,7 +126,11 @@ public class BankDao {
 
 	public Transaction getTransaction(String transactionId) {
 		
-		return this.transactionMapper.get(transactionId, Option.consistencyLevel(ConsistencyLevel.ONE));
+		String cql = String.format("select * from %s.transaction where solr_query = 'transaction_id:%s'", keyspaceName, transactionId);
+		ResultSet rs = this.session.execute(cql);
+
+		Result<Transaction> map = transactionMapper.map(rs);
+		return map.one();
 	}
 
 	public List<Transaction> getTransactionsSinceTime(String acountNo, DateTime from) {

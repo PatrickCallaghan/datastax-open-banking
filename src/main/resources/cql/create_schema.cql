@@ -7,11 +7,11 @@ create table if not exists transaction(
 	completed timestamp,
 	account_id text,
 	value double,
-	counterparty text,
+	counterparty text	,
 	json text,
-	PRIMARY KEY (transaction_id)
-);
-
+	PRIMARY KEY (account_id, completed, transaction_id)
+) with clustering order by (completed desc, transaction_id asc);
+	
 create table if not exists bank(
 	banks text, 
 	bank_id text,
