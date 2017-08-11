@@ -49,3 +49,29 @@ create table if not exists account	(
 	json text,
 	PRIMARY KEY (bank_id, account_id)
 );
+
+create table if not exists user(
+	user_name text PRIMARY KEY,
+	email text,
+	password text,
+	display_name text
+);
+
+create table if not exists permission (
+	bank_id text,
+	account_id text,
+	user_id text,
+	provider_id text,
+	view_id text,
+	view_json text,
+	PRIMARY KEY ((bank_id, account_id), user_id, provider_id, view_id)
+);
+
+truncate table transaction;
+truncate table atm;
+truncate table branch;
+truncate table bank;
+truncate table product;
+truncate table account;
+truncate table user;
+truncate table permission;

@@ -2,8 +2,6 @@
 
 import java.util.Date;
 
-import org.json.simple.JSONObject;
-
 import com.datastax.driver.mapping.annotations.Column;
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;

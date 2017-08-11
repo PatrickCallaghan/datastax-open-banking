@@ -3,8 +3,6 @@ package com.datastax.banking.dao;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.joda.time.DateTime;
@@ -15,16 +13,16 @@ import com.datastax.banking.model.Account;
 import com.datastax.banking.model.Atm;
 import com.datastax.banking.model.Bank;
 import com.datastax.banking.model.Branch;
+import com.datastax.banking.model.Permission;
 import com.datastax.banking.model.Product;
 import com.datastax.banking.model.Transaction;
+import com.datastax.banking.model.User;
 import com.datastax.driver.core.Cluster;
-import com.datastax.driver.core.ConsistencyLevel;
 import com.datastax.driver.core.PreparedStatement;
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.ResultSetFuture;
 import com.datastax.driver.core.Session;
 import com.datastax.driver.mapping.Mapper;
-import com.datastax.driver.mapping.Mapper.Option;
 import com.datastax.driver.mapping.MappingManager;
 import com.datastax.driver.mapping.Result;
 
@@ -57,15 +55,17 @@ public class BankDao {
 	private PreparedStatement getAtms;
 	private PreparedStatement getBranches;
 	private PreparedStatement getBanks;
-
 	
 	private AtomicLong count = new AtomicLong(0);
+	
 	private Mapper<Transaction> transactionMapper;
 	private Mapper<Bank> banksMapper;
 	private Mapper<Atm> atmsMapper;
 	private Mapper<Account> accountsMapper;
 	private Mapper<Product> productsMapper;
 	private Mapper<Branch> branchesMapper;
+	private Mapper<User> usersMapper;
+	private Mapper<Permission> permissionsMapper;
 
 	public BankDao(String[] contactPoints) {
 
@@ -86,6 +86,8 @@ public class BankDao {
 		productsMapper = new MappingManager(this.session).mapper(Product.class);
 		accountsMapper = new MappingManager(this.session).mapper(Account.class);
 		branchesMapper = new MappingManager(this.session).mapper(Branch.class);
+		usersMapper = new MappingManager(this.session).mapper(User.class);
+		permissionsMapper = new MappingManager(this.session).mapper(Permission.class);
 	}
 		
 	public void saveTransaction(Transaction transaction) {
@@ -145,6 +147,26 @@ public class BankDao {
 		return transactions.all();
 	}
 
+	public List<Branch> getBranchesByBankId(String bankId){
+		ResultSet resultSet = session.execute(this.getBranches.bind(bankId));		
+		return this.branchesMapper.map(resultSet).all();
+	}
+	
+	public List<Account> getAccountsByBankId(String bankId){
+		ResultSet resultSet = session.execute(this.getAccounts.bind(bankId));		
+		return this.accountsMapper.map(resultSet).all();
+	}
+	
+	public List<Product> getProductsByBankId(String bankId){
+		ResultSet resultSet = session.execute(this.getProducts.bind(bankId));		
+		return this.productsMapper.map(resultSet).all();
+	}
+	
+	public List<Atm> getAtmsByBankId(String bankId){
+		ResultSet resultSet = session.execute(this.getAtms.bind(bankId));		
+		return this.atmsMapper.map(resultSet).all();
+	}
+
 	public void saveBranch(Branch branch) {
 		this.branchesMapper.save(branch);
 	}
@@ -165,23 +187,11 @@ public class BankDao {
 		this.accountsMapper.save(account);
 	}
 
-	public List<Branch> getBranchesByBankId(String bankId){
-		ResultSet resultSet = session.execute(this.getBranches.bind(bankId));		
-		return this.branchesMapper.map(resultSet).all();
+	public void saveUser(User user) {
+		this.usersMapper.save(user);
 	}
 	
-	public List<Account> getAccountsByBankId(String bankId){
-		ResultSet resultSet = session.execute(this.getAccounts.bind(bankId));		
-		return this.accountsMapper.map(resultSet).all();
-	}
-	
-	public List<Product> getProductsByBankId(String bankId){
-		ResultSet resultSet = session.execute(this.getProducts.bind(bankId));		
-		return this.productsMapper.map(resultSet).all();
-	}
-	
-	public List<Atm> getAtmsByBankId(String bankId){
-		ResultSet resultSet = session.execute(this.getAtms.bind(bankId));		
-		return this.atmsMapper.map(resultSet).all();
+	public void savePermission(Permission permission) {
+		this.permissionsMapper.save(permission);
 	}
 }

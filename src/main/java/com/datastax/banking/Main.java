@@ -3,6 +3,7 @@ package com.datastax.banking;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
@@ -15,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import com.datastax.banking.dao.BankDao;
 import com.datastax.banking.data.BankGenerator;
 import com.datastax.banking.data.JSONReader;
+import com.datastax.banking.model.Permission;
 import com.datastax.banking.model.Transaction;
 import com.datastax.demo.utils.KillableRunner;
 import com.datastax.demo.utils.PropertyHelper;
@@ -56,12 +58,29 @@ public class Main {
 			executor.execute(task);
 			tasks.add(task);
 		}						
+
+		logger.info("Writing Permissions");
+		for (int i=0; i < noOfCustomers; i++){
+			String bank = BankGenerator.getRandomBank(10);
+			String accountId = "" + BankGenerator.getRandomAccountForCustomer(i);
+			String userId = "U" + i;
+			
+			int providers = new Double(Math.random()*5).intValue();
+			
+			for (int y=0; y < providers; y++){
+				String provider = BankGenerator.getRandomProvider(10);
 				
+				Permission permission = new Permission(bank, accountId, userId, provider, UUID.randomUUID().toString(), 
+						BankGenerator.getRandomPermissions());
+				dao.savePermission(permission);
+			}
+		}
+		
 		BankGenerator.date = new DateTime().minusDays(noOfDays).withTimeAtStartOfDay();
 		Timer timer = new Timer();
 		
 		long totalTransactions = noOfTransactions * noOfDays;
-		
+	
 		logger.info("Writing " + totalTransactions + " transactions for " + noOfCustomers + " customers.");
 		for (long i = 0; i < totalTransactions; i++) {
 			
@@ -78,7 +97,7 @@ public class Main {
 				sleep(10);
 			}
 		}
-		timer.end();		
+		timer.end();
 		
 		logger.info("Writing realtime transactions");
 		

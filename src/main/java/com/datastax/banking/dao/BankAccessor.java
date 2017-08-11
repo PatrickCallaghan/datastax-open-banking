@@ -4,6 +4,8 @@ import com.datastax.banking.model.Account;
 import com.datastax.banking.model.Atm;
 import com.datastax.banking.model.Branch;
 import com.datastax.banking.model.Product;
+import com.datastax.banking.model.Transaction;
+import com.datastax.banking.model.User;
 import com.datastax.driver.mapping.Result;
 import com.datastax.driver.mapping.annotations.Accessor;
 import com.datastax.driver.mapping.annotations.Query;
@@ -24,8 +26,11 @@ public interface BankAccessor {
     Result<Branch> getAllBranches();
 
 	@Query("SELECT * FROM transactions where bank_id = ?")
-    Result<Product> getAllTransactions();
+    Result<Transaction> getAllTransactions();
 
 	@Query("SELECT * FROM banks where bank_id = ?")
     Result<Product> getAllBanks();	
+
+	@Query("SELECT * FROM users")
+    Result<User> getAllUsers();	
 }

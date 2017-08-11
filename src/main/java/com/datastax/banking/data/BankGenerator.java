@@ -7,13 +7,13 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.datastax.banking.model.Transaction;
+import com.datastax.demo.utils.FileUtils;
 
 public class BankGenerator {
 
@@ -24,6 +24,8 @@ public class BankGenerator {
 	private static NumberFormat numFormatter = NumberFormat.getCurrencyInstance();
 	private static SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
+	private static String permissionTemplate = FileUtils.readFileIntoString("permission_template.txt");
+	
 	private static String transactionStr = "{\"id\":\"%s\",\"this_account\":{\"id\":\"%s\",\"bank\":\"psd201-bank-x--uk\"},\"counterparty\":{\"name\":\"%s\"}," + 
 			"\"details\":{\"type\":\"10219\",\"description\":\"\",\"posted\":\"%s\",\"completed\":\"%s\",\"new_balance\":\"%s\",\"value\":\"%s\"}}";
 	
@@ -63,12 +65,34 @@ public class BankGenerator {
 		return new Transaction(transactionId, completed, accountId, counterparty, amount, json); 
 	}
 	
+	public static String getRandomPermissions(){
+		
+		String json = permissionTemplate.replace("%VIEW_ID%", UUID.randomUUID().toString())
+				.replace("%ALIAS%", alias.get(new Double(Math.random()*alias.size()).intValue()))
+				.replace("%TRANSACTION_CURRENCY%", Math.random()>.5 ? "true" : "false")
+				.replace("%TRANSACTION_BALANCE%", Math.random()>.5 ? "true" : "false")
+				.replace("%COMMENTS%", Math.random()>.5 ? "true" : "false");
+		
+		return json;
+	}
+	
 	public static int getRandomAccountForCustomer(int customerId){
 		return (customerId * 10) + new Double(Math.random() * 3d).intValue(); 
 	}
 	
+	public static String getRandomBank(int noOfBanks){
+		return "BANK-" + new Double(Math.random()*noOfBanks).intValue(); 
+	}
+
+	public static String getRandomProvider(int noOfProviders){
+		return "P" + new Double(Math.random()*noOfProviders).intValue(); 
+	}
+
+	
+	
 	public static List<String> locations = Arrays.asList("London", "Manchester", "Liverpool", "Glasgow", "Dundee",
 			"Birmingham", "Dublin", "Devon");
+	public static List<String> alias = Arrays.asList("private", "public", "none");
 
 	public static List<String> counterpartys = Arrays.asList("Tesco", "Sainsbury", "Asda Wal-Mart Stores", "Morrisons",
 			"Marks & Spencer", "Boots", "John Lewis", "Waitrose", "Argos", "Co-op", "Currys", "PC World", "B&Q",

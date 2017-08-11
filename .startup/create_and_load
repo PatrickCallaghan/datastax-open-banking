@@ -1,0 +1,21 @@
+echo 'Installing Maven'
+if [ -f /etc/redhat-release ]; then
+  sudo yum install maven -y
+fi
+
+if [ -f /etc/lsb-release ]; then
+  sudo apt-get install maven -y
+fi
+
+echo 'Building schema'
+sudo mvn clean compile exec:java -Dexec.mainClass="com.datastax.demo.SchemaSetup" -DcontactPoints=node0
+
+echo 'Creating Cores'
+sudo dsetool create_core openb.transaction schema=src/main/resources/solr_schema.xml solrconfig=src/main/resources/solr_config.xml reindex=true
+
+echo 'Starting load data -> /tmp/loader.log'
+sudo nohup mvn clean compile exec:java -Dexec.mainClass="com.datastax.banking.Main" -DcontactPoints=node0 -Dcreate=true -DnoOfTransactions=10000000 -DnoOfCustomers=1000000 -DnoOfDays=15 > /tmp/loader.log &
+
+sleep 2
+
+echo 'Finished setting up'
