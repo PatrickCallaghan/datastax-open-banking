@@ -31,7 +31,7 @@ public class Main {
 
 		String contactPointsStr = PropertyHelper.getProperty("contactPoints", "localhost");
 		String createStr = PropertyHelper.getProperty("create", "false");
-		String noOfCustomersStr = PropertyHelper.getProperty("noOfCustomers", "5000000");
+		String noOfCustomersStr = PropertyHelper.getProperty("noOfCustomers", "100000");
 		String noOfTransactionsStr = PropertyHelper.getProperty("noOfTransactions", "1000000");
 		int noOfDays = Integer.parseInt(PropertyHelper.getProperty("noOfDays", "180"));
 
