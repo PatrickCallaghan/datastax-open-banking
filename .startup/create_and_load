@@ -16,7 +16,7 @@ sudo dsetool create_core openb.transaction schema=src/main/resources/solr_schema
 echo 'Starting load data -> /tmp/loader.log'
 sudo nohup mvn clean compile exec:java -Dexec.mainClass="com.datastax.banking.Main" -DcontactPoints=node0 -Dcreate=true -DnoOfTransactions=10000000 -DnoOfCustomers=1000000 -DnoOfDays=15 > /tmp/loader.log &
 
-echo 'Starting Webservice on 8081
+echo 'Starting Webservice on 8081'
 sudo nohup mvn jetty:run -Djetty.port=8081 > /tmp/webservice.log &
 
 sleep 2
