@@ -59,6 +59,8 @@ public class Main {
 			tasks.add(task);
 		}						
 
+		int counter = 0;
+		
 		logger.info("Writing Permissions");
 		for (int i=0; i < noOfCustomers; i++){
 			String bank = BankGenerator.getRandomBank(10);
@@ -73,6 +75,10 @@ public class Main {
 				Permission permission = new Permission(bank, accountId, userId, provider, UUID.randomUUID().toString(), 
 						BankGenerator.getRandomPermissions());
 				dao.savePermission(permission);
+				
+				if (++counter % 100000 == 0){
+					logger.info("Created " + counter + " permissions.");
+				}
 			}
 		}
 		
